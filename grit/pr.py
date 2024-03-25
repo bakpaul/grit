@@ -12,7 +12,7 @@ def pr(argv):
     pwd = os.getcwd()
 
     repo = Repo.init(pwd)
-
+    dir = pwd.split('/')
 
     if(argv[1] == 'start'):
         print('creating branch ' + argv[2] )
@@ -23,6 +23,13 @@ def pr(argv):
     elif(argv[1] == 'push'):
         print('Pushing branch to remote ' + argv[2])
         repo.git.push('--set-upstream',argv[2],repo.active_branch.name)
+        origin = repo.remote('origin')
+        if('master' in origin.refs):
+            compBranch = 'master'
+        else :
+            compBranch = 'main'
+
+        print('Start a PR --> https://github.com/' + dir[-2] + '/' + dir[-1] + '/compare/' + compBranch + '...' + argv[2] + ':' + repo.active_branch.name)
     else:
         printHelp()
         return
