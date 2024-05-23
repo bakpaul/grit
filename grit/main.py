@@ -2,6 +2,7 @@ import sys
 from grit.pr import pr
 from grit.remote import remote
 from grit.clone import clone
+from grit.branch import branch
 
 def main():
     if(len(sys.argv) == 1):
@@ -17,6 +18,9 @@ def main():
     elif(sys.argv[1] == 'remote'):
         remote(sys.argv[1:])
         return
+    elif(sys.argv[1] == 'branch'):
+        branch(sys.argv[1:])
+        return
     else:
         printHelp()
         return
@@ -27,6 +31,7 @@ def printHelp():
     print("  - clone")
     print("  - pr")
     print("  - remote")
+    print("  - branch")
 
 
 if __name__ == '__main__':
