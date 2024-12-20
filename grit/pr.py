@@ -3,22 +3,23 @@ from git import exc
 import os
 
 
-def pr(argv):
+def pr(argv,pwd):
 
     if(len(argv) < 3):
         printHelp()
         return
 
-    pwd = os.getcwd()
 
     repo = Repo.init(pwd)
     dir = pwd.split('/')
 
     if(argv[1] == 'start'):
         print('creating branch ' + argv[2] )
+        repo.git.stash()
         branch = repo.create_head(argv[2])
         repo.head.reference = branch
         repo.head.reset(index=True, working_tree=True)
+        repo.git.stash('apply')
         return
     elif(argv[1] == 'push'):
         print('Pushing branch to remote ' + argv[2])
