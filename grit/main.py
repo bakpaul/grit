@@ -3,23 +3,36 @@ from grit.pr import pr
 from grit.remote import remote
 from grit.clone import clone
 from grit.branch import branch
+import os
+
 
 def main():
     if(len(sys.argv) == 1):
         printHelp()
         return
 
+    #Find root directory of the repo
+    pwd = os.getcwd()
+    if(not os.path.isdir(pwd+"/.git")):
+        while (not os.path.isdir(pwd+"/.git")) and (pwd != "/"):
+            pwd = os.path.realpath(pwd + "/../")
+
+        if(pwd == "/"):
+            print("ERROR : this directory and non of its parent contains a .git file.")
+            return
+
+
     if(sys.argv[1] == 'pr'):
-        pr(sys.argv[1:])
+        pr(sys.argv[1:],pwd)
         return
     elif(sys.argv[1] == 'clone'):
         clone(sys.argv[1:])
         return
     elif(sys.argv[1] == 'remote'):
-        remote(sys.argv[1:])
+        remote(sys.argv[1:],pwd)
         return
     elif(sys.argv[1] == 'branch'):
-        branch(sys.argv[1:])
+        branch(sys.argv[1:],pwd)
         return
     else:
         printHelp()

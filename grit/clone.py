@@ -6,13 +6,12 @@ import sys
 from grit.utils import Progress
 
 
-def clone(argv):
+def clone(argv, pwd):
 
     if(len(argv) != 2):
         printHelp()
         return
 
-    pwd = os.getcwd()
     dir = pwd.split('/')
 
 

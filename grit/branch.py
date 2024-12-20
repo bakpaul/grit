@@ -4,13 +4,12 @@ import os
 from grit.utils import Progress
 
 
-def branch(argv):
+def branch(argv,pwd):
 
     if(len(argv) < 3):
         printHelp()
         return
 
-    pwd = os.getcwd()
     dir = pwd.split('/')
 
 
