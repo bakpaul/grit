@@ -1,13 +1,11 @@
 # GRIT: a tool for easy management of open-source repositories
 
----
-
 This simple script aims at speeding up multiples repository handling in different cases :
 - Cloning multiple repository from the same owner
 - Handling multiple remote
 - Making quick PRs
 - Listing most recently changed branch
----
+
 
 ## Installation :
 
@@ -18,7 +16,7 @@ or since python3.12 and venv generalization
 ```bash
 pipx install .
 ```
----
+
 ## How to use : 
 ### Prerequisites
 The script requires a coherent folder naming. Each repository needs to be inside a parent folder named after the owner of the repository in the remote server. 
