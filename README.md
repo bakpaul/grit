@@ -1,4 +1,4 @@
-# GRIT: a tool for easy management of open-source repositories
+# GRIT: a light tool for easy management of open-source repositories
 
 This simple script aims at speeding up multiples repository handling in different cases :
 - Cloning multiple repository from the same owner
