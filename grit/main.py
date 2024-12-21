@@ -13,13 +13,12 @@ def main():
 
     #Find root directory of the repo
     pwd = os.getcwd()
-    if(not os.path.isdir(pwd+"/.git")):
-        while (not os.path.isdir(pwd+"/.git")) and (pwd != "/"):
-            pwd = os.path.realpath(pwd + "/../")
+    while (not os.path.isdir(pwd+"/.git")) and (pwd != "/"):
+        pwd = os.path.realpath(pwd + "/../")
 
-        if(pwd == "/"):
-            print("ERROR : this directory and non of its parent contains a .git file.")
-            return
+    if(pwd == "/"):
+        print("ERROR : this directory and non of its parent contains a .git file.")
+        return
 
 
     if(sys.argv[1] == 'pr'):
