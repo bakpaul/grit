@@ -30,7 +30,7 @@ def remote(argv,pwd):
                 print(f"This remote doesn't exists. You can fork this repository here --> {origin_url_fork}")
                 repo.delete_remote(remote)
             elif(f"error: remote {argv[2]} already exists." in e.stderr):
-                print(f"This remote already exists.")
+                print(f"This remote name is already used.")
             return
         return
     else:
