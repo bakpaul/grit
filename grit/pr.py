@@ -12,6 +12,7 @@ def pr(argv,pwd):
 
     repo = Repo.init(pwd)
     dir = pwd.split('/')
+    origin_url_fork = 'https://www.github.com/' + dir[-2] + '/' +dir[-1] + '/fork'
 
     if(argv[1] == 'start'):
         print('creating branch ' + argv[2] )
@@ -23,7 +24,12 @@ def pr(argv,pwd):
         return
     elif(argv[1] == 'push'):
         print('Pushing branch to remote ' + argv[2])
-        repo.git.push('--set-upstream',argv[2],repo.active_branch.name)
+        try:
+            repo.git.push('--set-upstream',argv[2],repo.active_branch.name)
+        except exc.CommandError as e:
+            if("fatal: Could not read from remote repository" in e.stderr):
+                print(f"Remote doesn't exist.\nYou can add it by calling 'grit remote add {argv[2]}'")
+            return
         origin = repo.remote('origin')
         if('master' in origin.refs):
             compBranch = 'master'

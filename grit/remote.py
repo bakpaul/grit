@@ -1,7 +1,7 @@
 from git import Repo
 from git import exc
 import os
-from grit.utils import Progress
+from grit.utils import Progress, ProgressToString
 
 
 def remote(argv,pwd):
@@ -16,11 +16,22 @@ def remote(argv,pwd):
     repo = Repo.init(pwd)
 
     repo_url = 'git@github.com:' + argv[2] + '/' +dir[-1] + '.git'
+    origin_url_fork = 'https://www.github.com/' + dir[-2] + '/' +dir[-1] + '/fork'
 
     if(argv[1] == 'add'):
         print('Adding remote ' + argv[2] + ' = ' + repo_url + ' and fetching it...')
-        remote = repo.create_remote(argv[2], repo_url)
-        remote.fetch(progress=Progress())
+        try:
+            remote = repo.create_remote(argv[2], repo_url)
+            pts = ProgressToString()
+            remote.fetch(progress=pts)
+            pts.printString()
+        except exc.CommandError as e:
+            if("fatal: Could not read from remote repository" in e.stderr):
+                print(f"This remote doesn't exists. You can fork this repository here --> {origin_url_fork}")
+                repo.delete_remote(remote)
+            elif(f"error: remote {argv[2]} already exists." in e.stderr):
+                print(f"This remote already exists.")
+            return
         return
     else:
         printHelp()
