@@ -11,27 +11,18 @@ def main():
         printHelp()
         return
 
-    #Find root directory of the repo
-    pwd = os.getcwd()
-    while (not os.path.isdir(pwd+"/.git")) and (pwd != "/"):
-        pwd = os.path.realpath(pwd + "/../")
-
-    if(pwd == "/"):
-        print("ERROR : this directory and non of its parent contains a .git file.")
-        return
-
 
     if(sys.argv[1] == 'pr'):
-        pr(sys.argv[1:],pwd)
+        pr(sys.argv[1:])
         return
     elif(sys.argv[1] == 'clone'):
         clone(sys.argv[1:])
         return
     elif(sys.argv[1] == 'remote'):
-        remote(sys.argv[1:],pwd)
+        remote(sys.argv[1:])
         return
     elif(sys.argv[1] == 'branch'):
-        branch(sys.argv[1:],pwd)
+        branch(sys.argv[1:])
         return
     else:
         printHelp()

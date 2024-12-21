@@ -21,8 +21,9 @@ def clone(argv):
 
     print('Cloning ' + repo_url + ' into folder ' + repo_dir + '...')
 
-    repo = Repo.clone_from(repo_url, repo_dir,progress=Progress())
-    sys.stdout.flush()
+    progressObj=Progress()
+    repo = Repo.clone_from(repo_url, repo_dir,progress=progressObj)
+    progressObj.printLastLine()
 
     return
 

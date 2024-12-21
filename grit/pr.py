@@ -1,14 +1,18 @@
 from git import Repo
 from git import exc
-import os
+from grit.utils import findRootOfRepo
 
 
-def pr(argv,pwd):
+def pr(argv):
 
     if(len(argv) < 3):
         printHelp()
         return
 
+    pwd = findRootOfRepo()
+    if(pwd == "/"):
+        print("ERROR : this directory and non of its parent contains a .git file.")
+        return
 
     repo = Repo.init(pwd)
     dir = pwd.split('/')
