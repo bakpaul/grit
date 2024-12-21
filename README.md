@@ -19,7 +19,7 @@ pipx install .
 
 ## How to use : 
 ### Prerequisites
-The script requires a coherent folder naming. Each repository needs to be inside a parent folder named after the owner of the repository in the remote server. 
+The script requires a coherent folder naming. Each repository needs to be inside a parent folder named after the owner of the repository on github. 
 For instance, the [sofa](https://www.github.com/sofa-framework/sofa) repository needs to be inside a folder named `sofa-framework` : `/[...]/sofa-framework/sofa`.
 
 ### Commands
@@ -28,8 +28,8 @@ For instance, the [sofa](https://www.github.com/sofa-framework/sofa) repository 
 ```bash 
 grit pr <start/push> <branch_name/remote_name>
 ```
-***_start_***: creates a branch with the name given as last parameter. It keeps the current un-stashed changes (same as `git stash & git checkout -b branch_name & git stash apply`).
-***_push_***: push the created branch to the given remote with the branch name and track it (same as `git push --set-upstream remote_name branch_name`)
+- ***_start_***: creates a branch with the name given as last parameter. It keeps the current un-stashed changes (same as `git stash & git checkout -b branch_name & git stash apply`).
+- ***_push_***: push the created branch to the given remote with the branch name and track it (same as `git push --set-upstream remote_name branch_name`)
 
 The `origin` remote will always be considered as the name of the owner (thus the folder containing the repository). It will be used to display quick link for PR making when pushing the branch.
 
