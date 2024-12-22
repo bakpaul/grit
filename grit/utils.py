@@ -1,5 +1,53 @@
 from git.remote import RemoteProgress
 import os
+import functools
+import argparse
+from typing import Dict, List, Any, Tuple
+
+class argument:
+    def __init__(self, fullName, shortName=None, action=None,nargs=None,help=None):
+        self._fullName = fullName
+        self._shortName = shortName
+        self._action = action
+        self._nargs = nargs
+        self._help=help
+
+    def addArgument(self,parser):
+        parameterList = []
+        if self._shortName is not None:
+            parameterList.append(self._shortName)
+        parameterList.append(self._fullName)
+
+        parameterDict = {}
+        if self._action is not None:
+            parameterDict["action"] = self._action
+        if self._nargs is not None:
+            parameterDict["nargs"] = self._nargs
+        if self._help is not None:
+            parameterDict["help"] = self._help
+
+        parser.add_argument(*parameterList,**parameterDict)
+
+
+
+def gritMethod(description,argList : List[argument]):
+
+    def gritMethod_inner(func):
+        @functools.wraps(func)
+        def wrapper(inputedArgs):
+            parser = argparse.ArgumentParser(
+                prog="grit " + func.__name__,
+                description=description)
+            for param in argList:
+                param.addArgument(parser)
+
+            argumentsFromParse = parser.parse_args(inputedArgs)
+
+            func(argumentsFromParse)
+        return wrapper
+    return gritMethod_inner
+
+
 
 class Progress(RemoteProgress):
     def line_dropped(self, line):

@@ -11,12 +11,15 @@ def main():
         printHelp()
         return
 
+    if(sys.argv[1] == '-h'):
+        printHelp()
+        return
 
     if(sys.argv[1] == 'pr'):
         pr(sys.argv[1:])
         return
     elif(sys.argv[1] == 'clone'):
-        clone(sys.argv[1:])
+        clone(sys.argv[2:])
         return
     elif(sys.argv[1] == 'remote'):
         remote(sys.argv[1:])
