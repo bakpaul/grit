@@ -1,13 +1,13 @@
 from git import Repo
 from git import exc
+from grit.utils import gritMethod, argument
 from grit.utils import findRootOfRepo
 
-
+@gritMethod("Used to start PR and push them (provide quick link for PR starting on github)",
+            [argument("--start","-s",action='store_true', help="Create a branch with the given name "),
+             argument("--push","-p",action='store_true' ,help="Push the current branch in the given remote."),
+             argument("input",help="In start mode: the branch name. In push mode: the remote name.")])
 def pr(argv):
-
-    if(len(argv) < 3):
-        printHelp()
-        return
 
     pwd = findRootOfRepo()
     if(pwd == "/"):
@@ -16,21 +16,20 @@ def pr(argv):
 
     repo = Repo.init(pwd)
     dir = pwd.split('/')
-    origin_url_fork = 'https://www.github.com/' + dir[-2] + '/' +dir[-1] + '/fork'
 
-    if(argv[1] == 'start'):
-        print('creating branch ' + argv[2] )
-        branch = repo.create_head(argv[2])
+    if(argv.start):
+        print('creating branch ' + argv.input )
+        branch = repo.create_head(argv.input )
         repo.head.reference = branch
         repo.head.reset(index=True)
         return
-    elif(argv[1] == 'push'):
-        print('Pushing branch to remote ' + argv[2])
+    elif(argv.push):
+        print('Pushing branch to remote ' + argv.input )
         try:
-            repo.git.push('--set-upstream',argv[2],repo.active_branch.name)
+            repo.git.push('--set-upstream',argv.input,repo.active_branch.name)
         except exc.CommandError as e:
             if("fatal: Could not read from remote repository" in e.stderr):
-                print(f"Remote doesn't exist.\nYou can add it by calling 'grit remote add {argv[2]}'")
+                print(f"Remote doesn't exist.\nYou can add it by calling 'grit remote add {argv.input}'")
             return
         origin = repo.remote('origin')
         if('master' in origin.refs):
@@ -38,15 +37,8 @@ def pr(argv):
         else :
             compBranch = 'main'
 
-        print('Start a PR --> https://github.com/' + dir[-2] + '/' + dir[-1] + '/compare/' + compBranch + '...' + argv[2] + ':' + repo.active_branch.name)
-    else:
-        printHelp()
+        print('Start a PR --> https://github.com/' + dir[-2] + '/' + dir[-1] + '/compare/' + compBranch + '...' + argv.input + ':' + repo.active_branch.name)
+
         return
 
-    return
-
-def printHelp():
-    print('ERROR: pr option requires two arguments {start/push} [NAME]. ')
-    print('--> start: will create a branch named NAME and checkout it (git checkout -b NAME)')
-    print('--> push: will push the current branch to remote NAME (git push --set-upstream NAME currBranch)')
     return

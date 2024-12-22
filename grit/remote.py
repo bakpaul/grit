@@ -1,15 +1,14 @@
 from git import Repo
 from git import exc
 import os
-from grit.utils import Progress, ProgressToString
+from grit.utils import gritMethod, argument, ProgressToString
 from grit.utils import findRootOfRepo
 
 
+@gritMethod("Used to easily dealing with remotes by only using owner name",
+            [argument("--add","-a",action='store_true', help="Add remote"),
+             argument("remote_name",help="Name of the owner of the remote.")])
 def remote(argv):
-
-    if(len(argv) < 3):
-        printHelp()
-        return
 
     pwd = findRootOfRepo()
     if(pwd == "/"):
@@ -17,17 +16,16 @@ def remote(argv):
         return
 
     dir = pwd.split('/')
-
-
     repo = Repo.init(pwd)
 
-    repo_url = 'git@github.com:' + argv[2] + '/' +dir[-1] + '.git'
-    origin_url_fork = 'https://www.github.com/' + dir[-2] + '/' +dir[-1] + '/fork'
+    if(argv.add):
 
-    if(argv[1] == 'add'):
-        print('Adding remote ' + argv[2] + ' = ' + repo_url + ' and fetching it...')
+        repo_url = 'git@github.com:' + argv.remote_name + '/' +dir[-1] + '.git'
+        origin_url_fork = 'https://www.github.com/' + dir[-2] + '/' +dir[-1] + '/fork'
+    
+        print('Adding remote ' + argv.remote_name + ' = ' + repo_url + ' and fetching it...')
         try:
-            remote = repo.create_remote(argv[2], repo_url)
+            remote = repo.create_remote(argv.remote_name, repo_url)
             pts = ProgressToString()
             remote.fetch(progress=pts)
             pts.printString()
@@ -35,17 +33,9 @@ def remote(argv):
             if("fatal: Could not read from remote repository" in e.stderr):
                 print(f"This remote doesn't exists. You can fork this repository here --> {origin_url_fork}")
                 repo.delete_remote(remote)
-            elif(f"error: remote {argv[2]} already exists." in e.stderr):
+            elif(f"error: remote {argv.remote_name} already exists." in e.stderr):
                 print(f"This remote name is already used.")
             return
         return
-    else:
-        printHelp()
-        return
 
-    return
-
-def printHelp():
-    print('ERROR: remote option requires two arguments {add} [remotename] which is the github user name. ')
-    print('--> if your current repository is repo, the added or removed remote will be added using git remote add remotename git@github.com:remotename/repo.git')
     return

@@ -5,12 +5,13 @@ import argparse
 from typing import Dict, List, Any, Tuple
 
 class argument:
-    def __init__(self, fullName, shortName=None, action=None,nargs=None,help=None):
+    def __init__(self, fullName, shortName=None, action=None,nargs=None, default=None, help=None):
         self._fullName = fullName
         self._shortName = shortName
         self._action = action
         self._nargs = nargs
-        self._help=help
+        self._default = default
+        self._help = help
 
     def addArgument(self,parser):
         parameterList = []
@@ -23,6 +24,8 @@ class argument:
             parameterDict["action"] = self._action
         if self._nargs is not None:
             parameterDict["nargs"] = self._nargs
+        if self._default is not None:
+            parameterDict["default"] = self._default
         if self._help is not None:
             parameterDict["help"] = self._help
 
@@ -40,6 +43,9 @@ def gritMethod(description,argList : List[argument]):
                 description=description)
             for param in argList:
                 param.addArgument(parser)
+            if(len(inputedArgs) == 0):
+                parser.print_usage()
+                return
 
             argumentsFromParse = parser.parse_args(inputedArgs)
 

@@ -16,16 +16,16 @@ def main():
         return
 
     if(sys.argv[1] == 'pr'):
-        pr(sys.argv[1:])
+        pr(sys.argv[2:])
         return
     elif(sys.argv[1] == 'clone'):
         clone(sys.argv[2:])
         return
     elif(sys.argv[1] == 'remote'):
-        remote(sys.argv[1:])
+        remote(sys.argv[2:])
         return
     elif(sys.argv[1] == 'branch'):
-        branch(sys.argv[1:])
+        branch(sys.argv[2:])
         return
     else:
         printHelp()
