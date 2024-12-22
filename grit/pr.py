@@ -1,20 +1,12 @@
-from git import Repo
 from git import exc
-from grit.utils import gritMethod, argument
-from grit.utils import findRootOfRepo
+from grit.utils import  argument,gritInsideRepoMethod
 
-@gritMethod("Used to start PR and push them (provide quick link for PR starting on github)",
+@gritInsideRepoMethod("Used to start PR and push them (provide quick link for PR starting on github)",
             [argument("--start","-s",action='store_true', help="Create a branch with the given name "),
              argument("--push","-p",action='store_true' ,help="Push the current branch in the given remote."),
              argument("input",help="In start mode: the branch name. In push mode: the remote name.")])
-def pr(argv):
+def pr(pwd,repo,argv):
 
-    pwd = findRootOfRepo()
-    if(pwd == "/"):
-        print("ERROR : this directory and non of its parent contains a .git file.")
-        return
-
-    repo = Repo.init(pwd)
     dir = pwd.split('/')
 
     if(argv.start):

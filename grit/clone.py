@@ -1,11 +1,9 @@
 from git import Repo
-from git import exc
 
 import os
-import sys
-from grit.utils import *
+from grit.utils import gritOutsideRepoMethod, Progress, argument
 
-@gritMethod("Clone repository which owner has the same name as the current folder",
+@gritOutsideRepoMethod("Clone repository which owner has the same name as the current folder",
             [argument("repository_name")])
 def clone(argv):
 

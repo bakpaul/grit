@@ -3,6 +3,7 @@ import os
 import functools
 import argparse
 from typing import Dict, List, Any, Tuple
+from git import Repo
 
 class argument:
     def __init__(self, fullName, shortName=None, action=None,nargs=None, default=None, help=None):
@@ -31,10 +32,7 @@ class argument:
 
         parser.add_argument(*parameterList,**parameterDict)
 
-
-
-def gritMethod(description,argList : List[argument]):
-
+def gritOutsideRepoMethod(description,argList : List[argument]):
     def gritMethod_inner(func):
         @functools.wraps(func)
         def wrapper(inputedArgs):
@@ -53,6 +51,31 @@ def gritMethod(description,argList : List[argument]):
         return wrapper
     return gritMethod_inner
 
+def gritInsideRepoMethod(description,argList : List[argument]):
+    def gritMethod_inner(func):
+        @functools.wraps(func)
+        def wrapper(inputedArgs):
+            pwd = findRootOfRepo()
+            if(pwd == "/"):
+                print("ERROR : this directory and non of its parent contains a .git file.")
+                return
+
+            repo = Repo.init(pwd)
+
+            parser = argparse.ArgumentParser(
+                prog="grit " + func.__name__,
+                description=description)
+            for param in argList:
+                param.addArgument(parser)
+            if(len(inputedArgs) == 0):
+                parser.print_usage()
+                return
+
+            argumentsFromParse = parser.parse_args(inputedArgs)
+
+            func(pwd,repo,argumentsFromParse)
+        return wrapper
+    return gritMethod_inner
 
 
 class Progress(RemoteProgress):

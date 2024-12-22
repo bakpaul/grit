@@ -1,22 +1,12 @@
-from git import Repo
 from git import exc
-import os
-from grit.utils import gritMethod, argument, ProgressToString
-from grit.utils import findRootOfRepo
+from grit.utils import gritInsideRepoMethod, argument, ProgressToString
 
-
-@gritMethod("Used to easily dealing with remotes by only using owner name",
+@gritInsideRepoMethod("Used to easily dealing with remotes by only using owner name",
             [argument("--add","-a",action='store_true', help="Add remote"),
              argument("remote_name",help="Name of the owner of the remote.")])
-def remote(argv):
-
-    pwd = findRootOfRepo()
-    if(pwd == "/"):
-        print("ERROR : this directory and non of its parent contains a .git file.")
-        return
+def remote(pwd,repo,argv):
 
     dir = pwd.split('/')
-    repo = Repo.init(pwd)
 
     if(argv.add):
 
