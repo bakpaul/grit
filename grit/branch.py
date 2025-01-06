@@ -5,7 +5,7 @@ from git import exc
 
 @gritInsideRepoMethod("Used to manage branch. Currently the only option is --list <remote> [nb_of_branch]",
             [flagArgument("list","-l", help="Remote from which list "),
-             optionArgument("number","-n",nargs=1 ,help="Optional: number of branch to list. If specified, the branch will be sorted in order of last modified."),
+             optionArgument("number","-n",nargs='+' ,help="Optional: number of branch to list. If specified, the branch will be sorted in order of last modified."),
              positionalArgument("input",help="The remote name")])
 def branch(pwd,repo,argv):
     dir = pwd.split('/')

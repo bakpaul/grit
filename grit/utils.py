@@ -26,11 +26,12 @@ class argument:
     def getOptionsLine(self) -> str:
         pass
 
-    def parse(self, inputArguments:list[str] ) -> tuple[str, int, list[int]]:
+    def parse(self, inputArguments:list[str] ) -> tuple[str, int, list[int],str]:
         # Look for the strings that are for this argument and the return
         # 1. the name of the variable that should be created
         # 2. the position of the flag in the input argument (-1 if positional argument)
         # 3. The list containing the position of the values passed if any
+        # 4. String info
         pass
 
 class positionalArgument(argument):
@@ -44,11 +45,11 @@ class positionalArgument(argument):
     def getOptionsLine(self):
         return "  " + self._fullName + "\t" + self._help
 
-    def parse(self, inputArguments:list[str] ) -> tuple[str, int, list[int]]:
+    def parse(self, inputArguments:list[str] ) -> tuple[str, int, list[int], str]:
         if(len(inputArguments) == 0):
-            return "_ERROR_", -1, [ ]
+            return self._fullName, -1, [ ], "_ERROR_"
         else:
-            return self._fullName, -1, [len(inputArguments) -1]
+            return self._fullName, -1, [len(inputArguments) -1], "_FOUND_"
 
 
 class flagArgument(argument):
@@ -62,11 +63,11 @@ class flagArgument(argument):
     def getOptionsLine(self):
         return "  " + self._fullName + "\t" + self._help
 
-    def parse(self, inputArguments:list[str] ) -> tuple[str, int, list[int]]:
+    def parse(self, inputArguments:list[str] ) -> tuple[str, int, list[int],str]:
         for i in range(len(inputArguments)):
             if((inputArguments[i] == self._shortName) or (inputArguments[i] == self._fullName)):
-                    return self._fullName, i, [ ]
-        return self._fullName, -1, [ ]
+                    return self._fullName, i, [ ], "_FOUND_"
+        return self._fullName, -1, [ ], "_NOTFOUND_"
 
 
 
@@ -75,7 +76,7 @@ class optionArgument(argument):
     def __init__(self,  *arg, nargs=1,**kwargs):
         super().__init__(*arg, **kwargs)
         self.type = ArgumentType.OPTION
-        self._nargs = int(nargs)
+        self._nargs = nargs
 
 
     def getUsage(self):
@@ -84,15 +85,21 @@ class optionArgument(argument):
     def getOptionsLine(self):
         return "  " + self._fullName + "\t" + self._help
 
-    def parse(self, inputArguments:list[str] ) -> tuple[str, int, list[int]]:
+    def parse(self, inputArguments:list[str] ) -> tuple[str, int, list[int],str]:
+        if(self._nargs == "+"):
+            nargs = 1
+        else:
+            nargs = int(self._nargs)
         for i in range(len(inputArguments)):
             if((inputArguments[i] == self._shortName) or (inputArguments[i] == self._fullName)):
-                if(i + self._nargs >= len(inputArguments)):
-                    return "_ERROR_", -1, [ ]
+                if(i + nargs >= len(inputArguments)):
+                    return self._fullName, -1, [ ], "_ERROR_"
                 else :
-                    return self._fullName, i, [ j+i+1 for j in range(self._nargs) ]
-
-        return "_ERROR_", -1, [ ]
+                    return self._fullName, i, [ j+i+1 for j in range(nargs) ], "_FOUND_"
+        if(self._nargs=='+'):
+            return self._fullName, -1, [ ], "_NOTFOUND_"
+        else:
+            return self._fullName, -1, [ ], "_ERROR_"
 
 class parser:
     class parserOutput:
@@ -145,31 +152,32 @@ class parser:
         out = parser.parserOutput()
 
         for flag in self.argumentsFla :
-            itemName, idx, dataList = flag.parse(input)
-            if(itemName == "_ERROR_" and idx == -1 and len(dataList) == 0 ):
+            itemName, idx, dataList, info = flag.parse(input)
+            if(info == "_ERROR_"):
                 self.printUsage()
                 exit(0)
-
-            if(idx != -1):
+            elif(info == '_NOTFOUND_'):
+                out.addItem(itemName,False)
+            else:
                 out.addItem(itemName,True)
                 input.pop(idx)
-            else:
-                out.addItem(itemName,False)
 
         for option in self.argumentsOpt:
-            itemName, idx, dataList = option.parse(input)
-            if(itemName == "_ERROR_" and idx == -1 and len(dataList) == 0 ):
+            itemName, idx, dataList, info = option.parse(input)
+            if(info == "_ERROR_"):
                 self.printUsage()
                 exit(0)
-
-            out.addItem(itemName,[input[i] for i in dataList])
-            for i in reversed(dataList) :
-                input.pop(i)
-            input.pop(idx)
+            elif(info == "_NOTFOUND_"):
+                out.addItem(itemName,None)
+            else:
+                out.addItem(itemName,[input[i] for i in dataList])
+                for i in reversed(dataList) :
+                    input.pop(i)
+                input.pop(idx)
 
         for positional in self.argumentsPos:
-            itemName, idx, dataList = positional.parse(input)
-            if(itemName == "_ERROR_" and idx == -1 and len(dataList) == 0 ):
+            itemName, idx, dataList, info = positional.parse(input)
+            if(itemName == "_ERROR_"):
                 self.printUsage()
                 exit(0)
             out.addItem(itemName,input[dataList[0]])
