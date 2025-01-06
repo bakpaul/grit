@@ -1,10 +1,11 @@
 from git import exc
-from grit.utils import  argument,gritInsideRepoMethod
+from grit.utils import  gritInsideRepoMethod, ProgressToString
+from grit.utils import positionalArgument, flagArgument
 
 @gritInsideRepoMethod("Used to start PR and push them (provide quick link for PR starting on github)",
-            [argument("--start","-s",action='store_true', help="Create a branch with the given name "),
-             argument("--push","-p",action='store_true' ,help="Push the current branch in the given remote."),
-             argument("input",help="In start mode: the branch name. In push mode: the remote name.")])
+            [flagArgument("start","-s", help="Create a branch with the given name "),
+             flagArgument("push","-p",help="Push the current branch in the given remote."),
+             positionalArgument("input",help="In start mode: the branch name. In push mode: the remote name.")])
 def pr(pwd,repo,argv):
 
     dir = pwd.split('/')

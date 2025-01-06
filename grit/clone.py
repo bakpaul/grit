@@ -1,10 +1,12 @@
 from git import Repo
 
 import os
-from grit.utils import gritOutsideRepoMethod, Progress, argument
+from grit.utils import gritOutsideRepoMethod, Progress
+from grit.utils import positionalArgument, flagArgument
+
 
 @gritOutsideRepoMethod("Clone repository which owner has the same name as the current folder",
-            [argument("repository_name")])
+            [positionalArgument("repository_name")])
 def clone(argv):
 
     pwd = os.getcwd()

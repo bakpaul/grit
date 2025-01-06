@@ -1,9 +1,9 @@
 from git import exc
-from grit.utils import gritInsideRepoMethod, argument, ProgressToString
+from grit.utils import gritInsideRepoMethod, positionalArgument, flagArgument, ProgressToString
 
 @gritInsideRepoMethod("Used to easily dealing with remotes by only using owner name",
-            [argument("--add","-a",action='store_true', help="Add remote"),
-             argument("remote_name",help="Name of the owner of the remote.")])
+            [flagArgument("add",shortName="-a",help="Add remote"),
+             positionalArgument("remote_name",help="Name of the owner of the remote.")])
 def remote(pwd,repo,argv):
 
     dir = pwd.split('/')

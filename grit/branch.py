@@ -1,10 +1,12 @@
-from grit.utils import gritInsideRepoMethod, argument
+from grit.utils import gritInsideRepoMethod
+from grit.utils import positionalArgument, flagArgument, optionArgument
+
 from git import exc
 
 @gritInsideRepoMethod("Used to manage branch. Currently the only option is --list <remote> [nb_of_branch]",
-            [argument("--list","-l",action='store_true', help="Remote from which list "),
-             argument("--number","-n",nargs=1 ,help="Optional: number of branch to list. If specified, the branch will be sorted in order of last modified."),
-             argument("input",help="The remote name")])
+            [flagArgument("list","-l", help="Remote from which list "),
+             optionArgument("number","-n",nargs=1 ,help="Optional: number of branch to list. If specified, the branch will be sorted in order of last modified."),
+             positionalArgument("input",help="The remote name")])
 def branch(pwd,repo,argv):
     dir = pwd.split('/')
 
