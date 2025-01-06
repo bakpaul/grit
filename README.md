@@ -48,7 +48,7 @@ For instance, if you wanted to clone [sofa](https://www.github.com/sofa-framewor
 
 ---
 ```bash 
-grit branch list <remote_name> [number_of_branch]
+grit branch list <remote_name> [-n number_of_branch]
 ```
 If the `number_of_branch` is not specified, this command lists all branches of the input remote in alphabetical order
 Let `n` be the number of branch given as input, it will list the `n` most recently updated branches of the remote, sorted by date of modification (the more recent in first).
