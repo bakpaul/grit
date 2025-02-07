@@ -11,7 +11,9 @@ def remote(pwd,repo,argv):
     if(argv.add):
 
         repo_url = 'git@github.com:' + argv.remote_name + '/' +dir[-1] + '.git'
-        origin_url_fork = 'https://www.github.com/' + dir[-2] + '/' +dir[-1] + '/fork'
+
+        originName_repo = '.'.join(repo.git.remote('get-url','origin').split(':')[1].split('.')[:-1])
+        origin_url_fork = 'https://www.github.com/' + originName_repo + '/fork'
     
         print('Adding remote ' + argv.remote_name + ' = ' + repo_url + ' and fetching it...')
         try:

@@ -30,7 +30,9 @@ def pr(pwd,repo,argv):
         else :
             compBranch = 'main'
 
-        print('Start a PR --> https://github.com/' + dir[-2] + '/' + dir[-1] + '/compare/' + compBranch + '...' + argv.input + ':' + repo.active_branch.name)
+        originName_repo = '.'.join(repo.git.remote('get-url','origin').split(':')[1].split('.')[:-1])
+
+        print('Start a PR --> https://github.com/' + originName_repo + '/compare/' + compBranch + '...' + argv.input + ':' + repo.active_branch.name)
 
         return
 

@@ -177,7 +177,7 @@ class parser:
 
         for positional in self.argumentsPos:
             itemName, idx, dataList, info = positional.parse(input)
-            if(itemName == "_ERROR_"):
+            if(info == "_ERROR_"):
                 self.printUsage()
                 exit(0)
             out.addItem(itemName,input[dataList[0]])

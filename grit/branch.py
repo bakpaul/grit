@@ -25,7 +25,8 @@ def branch(pwd,repo,argv):
                     print(sortedBranches[i][1])
         except ValueError as e:
             if(f"Remote named '{argv.input}' didn't exist" in str(e)):
-                origin_url_fork = 'https://www.github.com/' + dir[-2] + '/' +dir[-1] + '/fork'
+                originName_repo = '.'.join(repo.git.remote('get-url','origin').split(':')[1].split('.')[:-1])
+                origin_url_fork = 'https://www.github.com/' + originName_repo + '/fork'
                 print(f"This remote doesn't exists. You can add it using 'grit remote --add {argv.input}'. You can also fork this repository here --> {origin_url_fork}")
             else:
                 print(f"Unknown error : {str(e)}.")
