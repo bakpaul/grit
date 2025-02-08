@@ -34,28 +34,32 @@ def tree(argv):
 
     if(argv.save):
         outputRepos = open(os.path.join(canonOutput,'git_tree.json'), 'w')
+        allJsons = []
         for root, dirs, files in os.walk(canonInput):
             if('.git' in dirs): #This is a git repo, save state.
                 repo = Repo.init(root)
-                jsonDescr = {"directory":root[len(canonInput):]}
-                jsonDescr["remotes"] = []
+                allJsons.append({"directory":root[len(canonInput):]})
+                allJsons[-1]["remotes"] = []
                 for remote in repo.remotes:
-                    jsonDescr["remotes"].append({"name":remote.name, "url":remote.url})
+                    allJsons[-1]["remotes"].append({"name":remote.name, "url":remote.url})
                 if(repo.head.is_detached):
-                    jsonDescr["checkout"] = repo.head.commit.hexsha
+                    allJsons[-1]["checkout"] = repo.head.commit.hexsha
                 else:
-                    jsonDescr["checkout"] = repo.head.ref.name
+                    allJsons[-1]["checkout"] = repo.head.ref.name
 
                 if(argv.dumpDiff):
-                    with open(jsonDescr["directory"].replace('/','_')+".diff",'w') as diffFile:
-                        diffFile.wrtie(repo.git.diff())
-
-                json.dump(jsonDescr, indent=4, sort_keys=False)
+                    currdiff = repo.git.diff()
+                    if len(currdiff) > 0:
+                        with open(os.path.join(canonOutput,allJsons[-1]["directory"].replace('/','_')+".diff"),'w') as diffFile:
+                            diffFile.write(currdiff)
+                            diffFile.close()
+                        allJsons[-1]["DiffFile"] = allJsons[-1]["directory"].replace('/','_')+".diff"
 
             if(not argv.treatHidden): #Filter hidden folders
                 for dir in dirs:
                     if(dir[0]=='.'):
                         dirs.remove(dir)
+        json.dump(allJsons,outputRepos, indent=4, sort_keys=False)
 
     elif(argv.load):
         pass
