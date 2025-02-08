@@ -3,6 +3,7 @@ from grit.pr import pr
 from grit.remote import remote
 from grit.clone import clone
 from grit.branch import branch
+from grit.tree import tree
 import os
 
 
@@ -26,6 +27,9 @@ def main():
         return
     elif(sys.argv[1] == 'branch'):
         branch(sys.argv[2:])
+        return
+    elif(sys.argv[1] == 'tree'):
+        tree(sys.argv[2:])
         return
     else:
         printHelp()
