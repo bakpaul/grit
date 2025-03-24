@@ -3,6 +3,7 @@ from grit.pr import pr
 from grit.remote import remote
 from grit.clone import clone
 from grit.branch import branch
+from grit.pluginize import pluginize
 import os
 
 
@@ -27,6 +28,9 @@ def main():
     elif(sys.argv[1] == 'branch'):
         branch(sys.argv[2:])
         return
+    elif(sys.argv[1] == 'pluginize'):
+        pluginize(sys.argv[2:])
+        return
     else:
         printHelp()
         return
@@ -38,6 +42,7 @@ def printHelp():
     print("  - pr")
     print("  - remote")
     print("  - branch")
+    print("  - pluginize")
 
 
 if __name__ == '__main__':
