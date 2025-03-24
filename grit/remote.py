@@ -1,5 +1,5 @@
 from git import exc
-from grit.utils import gritInsideRepoMethod, positionalArgument, flagArgument, ProgressToString
+from grit.utils import gritInsideRepoMethod, positionalArgument, flagArgument, ProgressToString, getRemoteNameFromURL, getRepoNameFromURL
 
 @gritInsideRepoMethod("Used to easily dealing with remotes by only using owner name",
             [flagArgument("add",shortName="-a",help="Add remote"),
@@ -12,7 +12,8 @@ def remote(pwd,repo,argv):
 
         repo_url = 'git@github.com:' + argv.remote_name + '/' +dir[-1] + '.git'
 
-        originName_repo = '.'.join(repo.git.remote('get-url','origin').split(':')[1].split('.')[:-1])
+        url = repo.git.remote('get-url','origin')
+        originName_repo = getRemoteNameFromURL(url) + "/" + getRepoNameFromURL(url)
         origin_url_fork = 'https://www.github.com/' + originName_repo + '/fork'
     
         print('Adding remote ' + argv.remote_name + ' = ' + repo_url + ' and fetching it...')

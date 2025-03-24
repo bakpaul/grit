@@ -263,6 +263,22 @@ class ProgressToString(RemoteProgress):
     def printString(self):
         print(self.string)
 
+def getRepoNameFromURL(url):
+    if(len(url) > 4  and url[:5] == 'https'):
+        temp = url.split('/')[-1]
+    else:
+        temp = url.split(':')[1].split('/')[-1]
+    if(url[-4:] == ".git"):
+        temp = '.'.join(temp.split('.')[:-1])
+    return temp
+
+def getRemoteNameFromURL(url):
+    if(len(url) > 3  and url[:5] == 'https'):
+        return url.split('/')[-2]
+    else:
+        return url.split(':')[1].split('/')[0]
+
+
 def findRootOfRepo():
     pwd = os.getcwd()
     while (not os.path.isdir(pwd+"/.git")) and (pwd != "/"):

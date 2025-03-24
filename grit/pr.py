@@ -1,5 +1,5 @@
 from git import exc
-from grit.utils import  gritInsideRepoMethod, ProgressToString
+from grit.utils import  gritInsideRepoMethod, ProgressToString, getRepoNameFromURL, getRemoteNameFromURL
 from grit.utils import positionalArgument, flagArgument
 
 @gritInsideRepoMethod("Used to start PR and push them (provide quick link for PR starting on github)",
@@ -30,7 +30,9 @@ def pr(pwd,repo,argv):
         else :
             compBranch = 'main'
 
-        originName_repo = '.'.join(repo.git.remote('get-url','origin').split(':')[1].split('.')[:-1])
+        url = repo.git.remote('get-url','origin')
+
+        originName_repo = getRemoteNameFromURL(url) + "/" + getRepoNameFromURL(url)
 
         print('Start a PR --> https://github.com/' + originName_repo + '/compare/' + compBranch + '...' + argv.input + ':' + repo.active_branch.name)
 
